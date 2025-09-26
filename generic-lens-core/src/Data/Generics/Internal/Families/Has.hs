@@ -48,17 +48,15 @@ type family HasTotalFieldP (field :: Symbol) f :: Maybe Type where
     = Alt (HasTotalFieldP field l) (HasTotalFieldP field r)
   HasTotalFieldP field (l :+: r)
     = Both (HasTotalFieldP field l) (HasTotalFieldP field r)
-  HasTotalFieldP field (S1 _ _)
-    = 'Nothing
-  HasTotalFieldP field (C1 _ f)
+  HasTotalFieldP field (K1 _ (M1 i c f _))
+    = HasTotalFieldP field (M1 i c f)
+  HasTotalFieldP field (M1 _ _ f)
     = HasTotalFieldP field f
-  HasTotalFieldP field (D1 _ f)
-    = HasTotalFieldP field f
-  HasTotalFieldP field (K1 _ _)
-    = 'Nothing
   HasTotalFieldP field U1
     = 'Nothing
   HasTotalFieldP field V1
+    = 'Nothing
+  HasTotalFieldP _ _
     = 'Nothing
 
 type family HasTotalTypeP (typ :: Type) f :: Maybe Type where
